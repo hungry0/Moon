@@ -1,5 +1,5 @@
 # Site
-title:              Li zeyu
+title:              Zeyu'Blog
 bio:                'Stay hungry. Stay foolish.'
 description:        "I'm a student at present,interested in rendering."
 reading_time:       true
@@ -29,7 +29,6 @@ sass:
 
 # Comments
 disqus_shortname:   hungrysharks
-comments: true
 
 # Social
 # if you don't have any of social below, comment the line.
