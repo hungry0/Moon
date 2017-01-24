@@ -2,7 +2,7 @@
 layout: post
 title:  "Hello World"
 date:   2017-01-24
-excerpt: "Welcome,thanks for you visiting!"
+excerpt: "Welcome,thank you for your visit!"
 tag:
 - Other
 comments: true
