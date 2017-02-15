@@ -8,7 +8,7 @@ logo:               'assets/img/icon.jpg'
 background:         'assets/img/placeholder-big.jpg'
 tiled_bg:           false   # Set this true if you want to tile your background image, otherwise it will be covered
 locale:             en_US
-url:                https://lizeyu.me
+url:                http://lizeyu.me
 
 encoding: utf-8
 
@@ -39,7 +39,7 @@ disqus_shortname:   hungrysharks
   #ad-client:
   #ad-slot:
 #bing-verify:
-email:              zeyuli0225@gmail.com
+email:              277862831@qq.com
 #twitter:            username
 #facebook:           username
 github-url:         hungry0
