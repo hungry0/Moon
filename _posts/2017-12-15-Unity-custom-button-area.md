@@ -29,4 +29,4 @@ public class CustomButtonArea : Image
 {% endhighlight %}
 
 当前项目需要自定义按钮区域的地方
-![custom-area](https://github.com/hungry0/hungry0.github.io/blob/master/assets/img/posts-img/customBtnArea.png)
+![custom-area](http://lizeyu.me/images/customBtnArea.png)
