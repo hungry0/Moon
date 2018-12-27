@@ -12,3 +12,5 @@ comments: true
 
 
 log的位置是在**./Library/Logs/Unity**
+
+Windows下的位置是在 **AppData\Local\Unity\Editor\Editor.log**
