@@ -11,7 +11,7 @@ comments: true
 由于项目是多语言版本，所以平时Text中都是挂载多语言脚本，然后将值存到语言表中，但是为了防止有时候直接存放了中文忘记提到语言表中，找了一个保存prefab时的回调，用于检测。主要逻辑如下。  
 
 
-{% highlight c# %}
+{% highlight csharp %}
 using UnityEngine;
 using UnityEditor;
 using System.Text.RegularExpressions;
