@@ -74,20 +74,20 @@ comments: true
 
 ![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_25%201.png?raw=true)
 
-- 蓝图的功能可以加进方法和常量
+- 蓝图的功能可以加进方法和常量。
 - 可以存在于蓝图库中，供所有蓝图调用。
 - 可以用C++封装。
 - 非常普遍。
 
 ![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_29%201.png?raw=true)
 
-- 蓝图之间交互
-- 在许多类之间更通用。
+- 蓝图之间交互。
+- 在许多不同类之间进行日常交互。
 - 替代Casting，并且更有效率。
 
 ![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_30%201.png?raw=true)
 
-做数据相关的交互比较方便
+做数据相关的交互也比较方便
 
 ![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_31%201.png?raw=true)
 
@@ -115,8 +115,8 @@ comments: true
 
 1. 是否做的足够简洁。
 2. 是否好理解。
-3.  ----------------------没看懂
-4.  是否把内存和性能考虑在内。
+3.  类与类之间是否交互。
+4.  是否把内存和性能考虑在内了。
 5. 扩展性是否好。
 
 ![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_37%201.png?raw=true)
@@ -131,7 +131,7 @@ comments: true
 
 - 不要把事情搞复杂。
 - 平衡好新用法和需求。
-- 一句话就是延展性或者说扩展性。
+- 一句话就是说扩展性要好。
 - 性能和稳定，不断考虑如何避免bug。
 
 ![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_45%201.png?raw=true)
@@ -306,13 +306,352 @@ Timers和Events可以搭配使用替换Tick，很常用。
 
 ### Memory and Loading
 
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_93%201.png?raw=true)
+
+- 蓝图对内存消耗和加载时间的影响很大
+- **蓝图被认为是资源**
+- C++是在启动时全部加载，而蓝图是需要的时候加载，和Mesh等无异。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_94%201.png?raw=true)
+
+大概就是资源也是在需要的时候才加载，而蓝图属于资源。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_95%201.png?raw=true)
+
+- 右键资源-Reference Viewer可以显示资源引用的资源，左上角可以设置深度。
+- 并且会先加载应用的资源，例如材质引用了图片，先加载图片。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_97%201.png?raw=true)
+
+- 蓝图引用的任何形式的资源都会加载进内存。
+-  如果蓝图中有很多引用，那么很可能均加载。
+-  Cast转换也是引用，意思就是也会加载。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_98%201.png?raw=true)
+
+需要管理好引用，如果数量巨大，可以考虑拆分到子蓝图中。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_101%201.png?raw=true)
+
+在资源上右键-Size Map可以显示这个资源加上它所引用资源的大小。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_102%201.png?raw=true)
+
+可以提前指定好引用规则：
+
+- 关键类用C++实现。
+- 蓝图继承。
+- 蓝图在继承蓝图。
+
+设定Cast的规则。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_103%201.png?raw=true)
+
+这个就是满足上面规则的继承树。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_104%201.png?raw=true)
+
+方法库也一样，被引用的话也是全部加载，所以方法库应该只关注逻辑，尽量不引用资源。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_105%201.png?raw=true)
+
+有资源引用，最右侧的粒子系统。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_106%201.png?raw=true)
+
+没有资源引用，放到了参数中，动态设定。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_107%201.png?raw=true)
+
+GameMode拆分也有助于降低内存占用和加载时间长。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_108%201.png?raw=true)
+
+可以动态加载。软引用可以控制资源加载时机更精确。（软引用在Reference Viewer中是淡红色线连接。）图示中是使用**Async Load Asset**实现软引用。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_110%201.png?raw=true)
+
+如果有大量可配置项，软引用是唯一的方法。可以通过使用Map来管理。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_112%201.png?raw=true)
+
+编辑器的加载时间不具有参考性，以最终的包为准。
+
 ### Garbage Collection(GC)
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_114%201.png?raw=true)
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_113%201.png?raw=true)
+
+GC就是清理不再使用的对象。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_116%201.png?raw=true)
+
+不使用时会标记，引擎会遍历所有的对象找到需要清除的，然后清理它们占用的内存空间。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_117%201.png?raw=true)
+
+GC因为需要遍历所有物体，所以是一个很耗时的操作。不过一般不用考虑这个，引擎都做了，除非一下子创建或者销毁很多物体。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_118%201.png?raw=true)
+
+使用池避免创建和销毁。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_120%201.png?raw=true)
+
+虚幻是每隔一段时间扫描一次，可以在设置中修改，默认是61s。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_121%201.png?raw=true)
+
+不建议开启Cluster，可以移到C++中。
 
 ## Compilation
 
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_122%201.png?raw=true)
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_123%201.png?raw=true)
+
+是什么影响了编译时间、迭代时间等。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_124%201.png?raw=true)
+
+- 编译时间不影响运行时间。
+- 影响迭代时间的原因是项目大。
+- 引用关系影响内存和加载时间。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_125%201.png?raw=true)
+
+影响编译时间的因素有：
+
+- 蓝图中的节点数量。
+- Casting和其它的引用数量。
+- 循环引用。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_127%201.png?raw=true)
+
+蓝图有一些上限，但是不用关心，如果超出了，肯定是自己的问题。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_128%201.png?raw=true)
+
+最糟糕的情况是节点太多。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_129%201.png?raw=true)
+
+宏是直接插到蓝图中编译的，偶尔会有用，不过没必要故意的使用。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_130%201.png?raw=true)
+
+- 把功能拆分到子蓝图中。
+-  Casting也能关键。
+- 在大项目中，都是移植到C++中。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_131%201.png?raw=true)
+
+蓝图的节点数量对编译速度很关键。Cast的对象会先被编译，然后才轮得上本蓝图编译。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_134%201.png?raw=true)
+
+引用一个对象和Cast的效果是一样的。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_135%201.png?raw=true)
+
+对内存的影响比编译速度的影响更严重。
+
+### The good and bad casting
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_136%201.png?raw=true)
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_137%201.png?raw=true)
+
+Cast和引用应该谨慎，尽可能的减少使用。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_138%201.png?raw=true)
+
+- 强转为Pawn一般情况没问题，因为player类一直在内存中。
+- 其它框架类也一般ok。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_140%201.png?raw=true)
+
+把任何蓝图强转到一个只含变量的蓝图是可以的，因为不会影响编译速度和内存占用。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_141%201.png?raw=true)
+
+强转为一个很少使用的蓝图不好，尤其是它包含很多功能。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_142%201.png?raw=true)
+
+在框架类之间来回转换，对内存来说没啥影响，不过编译时间可能受影响。因为它需要编译所有的类，如果修改了其中一个。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_144%201.png?raw=true)
+
+核心类一直在内存中，其余不是。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_145%201.png?raw=true)
+
+- 设计一个系统决定何时以及在哪可以Cast。
+- 设计一些类可以无损耗的强转的。
+- 最小化依赖链。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_146%201.png?raw=true)
+
+使用C++作为桥梁，并且可以使蓝图更清晰。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_148%201.png?raw=true)
+
+利用好事件系统。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_150%201.png?raw=true)
+
+强转为父类没有任何损耗。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_151%201.png?raw=true)
+
+利用好接口，也可以降低Cast和引用的数量。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_152%201.png?raw=true)
+
+接口明显不用Cast。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_153%201.png?raw=true)
+
+检查一个Actor是否是特定类也是一次引用，所以可以查Tag，这样可以避免一次强转咯。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_154%201.png?raw=true)
+
+最好的方式是一些混合：
+
+- 好的Cast策略 + C++ + 接口 + 继承。
+- 一些tags。
+
+### Race Conditions
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_155%201.png?raw=true)
+
+介绍下编译时竞争条件。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_156%201.png?raw=true)
+
+互相引用造成的问题。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_158%201.png?raw=true)
+
+小心蓝图的初始化顺序。（这个咋小心？）
+
+是否有效的检测可能出发竞争条件。
+
+如果很多蓝图互相引用，很容易出现这种情况。
+
 ## C++
 
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_159%201.png?raw=true)
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_160%201.png?raw=true)
+
+所有的蓝图节点的实现都是C++。很容易用蓝图扩展C++；
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_161%201.png?raw=true)
+
+大型项目的C++可能占百分之80，不过因项目而异。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_162%201.png?raw=true)
+
+从蓝图开始，而精于C++；
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_163%201.png?raw=true)
+
+- 效率高。
+- 易管理。
+- Save Games、SDK、平台差异等不能用蓝图或者不方便。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_164%201.png?raw=true)
+
+- 蓝图易于出原型。
+- 迭代快。
+- 易于理解。
+- 弹性好。
+- 更适用于引用资源。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_165%201.png?raw=true)
+
+还是那句话，C++做功能，蓝图扩展。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_166%201.png?raw=true)
+
+这些情况需要使用C++：
+
+- 很多地方使用。
+- 每帧都调用。
+- 很容易出Bug的地方。
+- 以后极有可能扩展的。
+- Save Games、网络等方面。
+- 重要的变量或者枚举等。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_169%201.png?raw=true)
+
+使用pure functions（不知道怎么翻译好）优化工作流。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_170%201.png?raw=true)
+
+如果很多蓝图都需要访问，那么用C++的静态方法很好。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_171%201.png?raw=true)
+
+如果大部分方法是用C++实现，那么应该提供回调和事件。及时暂时用不上。
+
 ## Miscellaneous
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_172%201.png?raw=true)
+
+一些杂项。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_173%201.png?raw=true)
+
+标为DOP的节点是故意不连接的。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_174%201.png?raw=true)
+
+使用纯函数使代码整洁一些。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_175%201.png?raw=true)
+
+暴露出入口，这样新建Actor时就可以设置值。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_176%201.png?raw=true)
+
+自定义事件可以勾选Call In Editor，这样Editor中也可以调用。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_177%201.png?raw=true)
+
+暴露给Cinematics。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_178%201.png?raw=true)
+
+删除无用的变量。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_180%201.png?raw=true)
+
+可以在蓝图中标记为过时，这样扔可以使用，不过不可编辑了。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_181%201.png?raw=true)
+
+类似于一个标记，可以快速跳转过去。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_182%201.png?raw=true)
+
+- 和Data tables类似并且可以从CSV格式导入。
+- 可以用来做国际化。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_183%201.png?raw=true)
+
+Maps可以运行时修改。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_184%201.png?raw=true)
+
+Sets和Arrays类似，不过里面的值唯一。
+
+![](https://github.com/hungry0/Study_Books/blob/master/Books/Blueprint%20In-Depth/Images/Snip20190529_185%201.png?raw=true)
+
+在使用对象之前，切记检测，否则崩溃。
 
 
 
