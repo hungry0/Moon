@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Blueprint In-Depth"
-date:   2019-05-30
-excerpt: "UnrealEngine Basic"
+title:  "c++自定义内存分配器，即allocator类的自定义"
+date:   2019-08-21
+excerpt: "c++"
 tag:
-- [UnrealEngine]
+- [memory]
 comments: true
 ---
 
@@ -67,7 +67,7 @@ public:
 			return nullptr;
 		}
 
-    // 这里的malloc可替换成自己的。
+        // 这里的malloc可替换成自己的。
 		void* const pv = malloc(num * sizeof(T));
 		if(!pv)
 		{
@@ -77,7 +77,7 @@ public:
 		return static_cast<T*>(pv);
 	}
 
-  // 这里的free可替换成自己的。
+    // 这里的free可替换成自己的。
 	void deallocate(T* p, size_t num) const noexcept
 	{
 		free((uint8_t*)p);
@@ -90,7 +90,7 @@ public:
 
 	void construct(pointer p, const_reference t)
 	{
-    //这里就是在指定内存块上创建对象
+        //这里就是在指定内存块上创建对象
 		new (p) T(t);
 	}
 
