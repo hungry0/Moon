@@ -107,4 +107,21 @@ public:
 };
 ```
 
+使用的话，指定一些stl的数据结构使用该allocator就行了，例如
+
+```c++
+int main()
+{
+	auto vec = std::vector<int, StdFrameAlloc<int>>();
+	vec.push_back(1);
+
+	for(auto i : vec)
+	{
+		cout << i << endl;
+	}
+
+	return 0;
+}
+```
+
 框架就是这样，是参考的官方文档和bsf的。以后添坑！
